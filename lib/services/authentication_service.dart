@@ -2,6 +2,7 @@ import 'package:bloc_app_template/locator.dart';
 import 'package:bloc_app_template/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../models/user.dart';
 
@@ -12,6 +13,12 @@ class AuthenticationService {
   User _currentUser;
 
   User get currentUser => _currentUser;
+
+  Future<bool> isUserIn() async {
+    var firebaseUser = await _firebaseAuth.currentUser();
+    await _getCurrentUser(firebaseUser);
+    return firebaseUser != null;
+  }
 
   Future createUserWithEmail({
     @required fullName,
@@ -35,9 +42,38 @@ class AuthenticationService {
 
       return authResult != null;
     } catch (e) {
-      // if (e is PlatformException) return e.message;
-      // return e.toString();
-      return e.message;
+      if (e is PlatformException) return e.message;
+      return e.toString();
+    }
+  }
+
+  Future logInWithEmail({
+    @required String email,
+    @required String password,
+  }) async {
+    try {
+      var authResult = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await _getCurrentUser(authResult.user);
+
+      return authResult != null;
+    } catch (e) {
+      if (e is PlatformException) return e.message;
+      return e.toString();
+    }
+  }
+
+  Future signOut() async {
+    await _firebaseAuth.signOut();
+    _currentUser = null;
+  }
+
+  Future _getCurrentUser(FirebaseUser user) async {
+    if (user != null) {
+      _currentUser = await _firestoreService.getUserData(user.uid);
     }
   }
 }

@@ -1,8 +1,9 @@
-import 'package:bloc_app_template/services/authentication_service.dart';
-import 'package:bloc_app_template/services/dialog_service.dart';
 import 'package:flutter/foundation.dart';
 
 import 'base_bloc.dart';
+
+import '../services/authentication_service.dart';
+import '../services/dialog_service.dart';
 
 import '../locator.dart';
 import '../services/navigation_service.dart';

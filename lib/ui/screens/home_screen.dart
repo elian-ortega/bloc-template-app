@@ -10,6 +10,24 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(bloc.title),
+        actions: [
+          IconButton(
+            color: Colors.red,
+            onPressed: () {
+              bloc.signOut();
+            },
+            icon: Icon(
+              Icons.lock_outline,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          bloc.navigateToAddPost();
+        },
       ),
     );
   }

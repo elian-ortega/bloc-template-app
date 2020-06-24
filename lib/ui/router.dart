@@ -1,18 +1,28 @@
+import 'package:bloc_app_template/ui/screens/addpost_screen.dart';
 import 'package:bloc_app_template/ui/screens/home_screen.dart';
+import 'package:bloc_app_template/ui/screens/startup_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../ui/screens/login_screen.dart';
 import '../ui/screens/signup_screen.dart';
 
 class Routes {
+  static const String startup = 'startup';
   static const String login = 'login';
   static const String signup = 'signup';
   static const String home = 'home';
+  static const String addpost = 'addpost';
 }
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case Routes.startup:
+        return _getPageRoute(
+          routeName: settings.name,
+          screen: StartUpScreen(),
+        );
+        break;
       case Routes.login:
         return _getPageRoute(
           routeName: settings.name,
@@ -29,6 +39,12 @@ class Router {
         return _getPageRoute(
           routeName: settings.name,
           screen: HomeScreen(),
+        );
+        break;
+      case Routes.addpost:
+        return _getPageRoute(
+          routeName: settings.name,
+          screen: AddPostScreen(),
         );
         break;
       default:

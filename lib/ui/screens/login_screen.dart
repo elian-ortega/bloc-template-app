@@ -21,25 +21,46 @@ class LogInScreen extends StatelessWidget {
             CustomTextField(
               hintText: 'Email',
               icon: Icons.mail,
+              onChanged: bloc.setEmail,
             ),
             CustomTextField(
               hintText: 'Password',
               icon: Icons.security,
+              onChanged: bloc.setPassword,
             ),
-            RaisedButton(
-              onPressed: () {},
-              color: Colors.blue,
-              child: Text('Log In'),
-            ),
-            FlatButton(
-              onPressed: () {
-                bloc.navigateToSignUp();
-              },
-              child: Text('Don\'t have an account? Go to Sing Up!'),
-            )
+            !bloc.isBusy ? _Buttons() : CircularProgressIndicator(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Buttons extends StatelessWidget {
+  const _Buttons({
+    Key key,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<LogInBloc>(context);
+    return Column(
+      children: [
+        RaisedButton(
+          onPressed: () {
+            print('yes');
+
+            bloc.logInWithEmail();
+          },
+          color: Colors.blue,
+          child: Text('Log In'),
+        ),
+        FlatButton(
+          onPressed: () {
+            bloc.navigateToSignUp();
+          },
+          child: Text('Don\'t have an account? Go to Sing Up!'),
+        )
+      ],
     );
   }
 }

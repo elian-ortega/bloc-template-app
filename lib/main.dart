@@ -1,4 +1,3 @@
-import 'package:bloc_app_template/services/dialog_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,9 +6,12 @@ import 'ui/router.dart';
 import 'ui/dialogs.dart';
 
 import 'services/navigation_service.dart';
+import 'services/dialog_service.dart';
+
 import 'blocs/login_bloc.dart';
 import 'blocs/signup_bloc.dart';
 import 'blocs/home_bloc.dart';
+import 'blocs/startup_bloc.dart';
 
 void main() {
   setUpLocator();
@@ -19,6 +21,7 @@ void main() {
         ChangeNotifierProvider<LogInBloc>(create: (_) => LogInBloc()),
         ChangeNotifierProvider<SignUpBloc>(create: (_) => SignUpBloc()),
         ChangeNotifierProvider<HomeBloc>(create: (_) => HomeBloc()),
+        ChangeNotifierProvider<StartUpBloc>(create: (_) => StartUpBloc()),
       ],
       child: MyApp(),
     ),
@@ -42,7 +45,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // home: LogInScreen(),
-      initialRoute: Routes.login,
+      initialRoute: Routes.startup,
       onGenerateRoute: Router.generateRoute,
       navigatorKey: locator<NavigationService>().navigationKey,
     );
