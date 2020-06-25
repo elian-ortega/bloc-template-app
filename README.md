@@ -1,6 +1,6 @@
 # bloc_app_template
 
-A new Flutter project.
+A new Flutter project. This is a template of the BLoC architecture for a basic app that covers all firebase functionality using Provider as state management tool.
 
 ## Getting Started
 
