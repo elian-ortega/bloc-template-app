@@ -1,3 +1,4 @@
+import 'package:bloc_app_template/models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,27 @@ class HomeScreen extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () {
           bloc.navigateToAddPost();
+        },
+      ),
+      body: StreamBuilder<List<Post>>(
+        stream: bloc.postsStream,
+        builder: (_, snapshot) {
+          List<Widget> children;
+          if (snapshot.connectionState == ConnectionState.active) {
+            children = snapshot.data.map(
+              (post) {
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(post.title),
+                  color: Colors.red,
+                );
+              },
+            ).toList();
+            return Column(
+              children: children,
+            );
+          }
+          return Container();
         },
       ),
     );

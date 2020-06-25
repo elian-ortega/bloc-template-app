@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomFormTextField extends StatelessWidget {
   final String hintText;
   final IconData icon;
-  final Function onChanged;
-  const CustomTextField({
+  final Function onSaved;
+  final int maxLines;
+  const CustomFormTextField({
     Key key,
     this.hintText,
     this.icon,
-    this.onChanged,
+    this.onSaved,
+    this.maxLines = 1,
   }) : super(key: key);
 
   @override
@@ -20,8 +22,15 @@ class CustomTextField extends StatelessWidget {
         color: Colors.grey.withOpacity(.6),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: TextField(
-        onChanged: onChanged,
+      child: TextFormField(
+        onSaved: onSaved,
+        maxLines: maxLines,
+        validator: (value) {
+          if (value.isEmpty) {
+            return 'Field is empty.';
+          }
+          return null;
+        },
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,

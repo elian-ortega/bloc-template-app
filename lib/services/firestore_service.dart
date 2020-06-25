@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -13,6 +15,7 @@ class FirestoreService {
   static final CollectionReference _postsCollection =
       Firestore.instance.collection('posts');
 
+  final StreamController _postStreamController = StreamController<List<Post>>();
   /*
    * User Related
    */
@@ -42,10 +45,34 @@ class FirestoreService {
 
   Future createPost({@required Post post}) async {
     try {
-      await _postsCollection.add(post.toMap());
+      var addResult = await _postsCollection.add(post.toMap());
+
+      return addResult != null;
     } catch (e) {
       if (e is PlatformException) return e.message;
       return e.toString();
     }
+  }
+
+  Stream<List<Post>> listenToPost() {
+    _postsCollection.snapshots().listen(
+      (postSnapshot) {
+        if (postSnapshot.documents.isNotEmpty) {
+          var posts = postSnapshot.documents
+              .map(
+                (snapshot) => Post.fromData(
+                  snapshot.data,
+                  snapshot.documentID,
+                ),
+              )
+              .where((mappedItem) => mappedItem != null)
+              .toList();
+
+          _postStreamController.add(posts);
+        }
+      },
+    );
+
+    return _postStreamController.stream;
   }
 }

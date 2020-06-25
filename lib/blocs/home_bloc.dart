@@ -1,3 +1,6 @@
+import 'package:bloc_app_template/models/post.dart';
+import 'package:bloc_app_template/services/firestore_service.dart';
+
 import 'base_bloc.dart';
 
 import '../locator.dart';
@@ -9,10 +12,15 @@ import '../ui/router.dart';
 class HomeBloc extends BaseBloc {
   static final _navigationService = locator<NavigationService>();
   static final _authenticationService = locator<AuthenticationService>();
+  static final _firestoreService = locator<FirestoreService>();
 
   /*
    * UI 
    */
+
+  List<Post> _posts;
+  List<Post> get posts => _posts;
+
   final String _title = 'Home';
   String get title => _title;
 
@@ -23,6 +31,8 @@ class HomeBloc extends BaseBloc {
   Future<void> navigateToAddPost() async {
     await _navigationService.navigateTo(Routes.addpost);
   }
+
+  Stream get postsStream => _firestoreService.listenToPost();
 
   /*
   * Acutal Logic

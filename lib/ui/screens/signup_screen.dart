@@ -19,20 +19,27 @@ class SignUpScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomTextField(
-                    hintText: 'Name',
-                    icon: Icons.person,
-                    onChanged: bloc.setName,
-                  ),
-                  CustomTextField(
-                    hintText: 'Email',
-                    icon: Icons.mail,
-                    onChanged: bloc.setEmail,
-                  ),
-                  CustomTextField(
-                    hintText: 'Password',
-                    icon: Icons.security,
-                    onChanged: bloc.setPassword,
+                  Form(
+                    key: bloc.formKey,
+                    child: Column(
+                      children: [
+                        CustomFormTextField(
+                          hintText: 'Name',
+                          icon: Icons.person,
+                          onSaved: bloc.setName,
+                        ),
+                        CustomFormTextField(
+                          hintText: 'Email',
+                          icon: Icons.mail,
+                          onSaved: bloc.setEmail,
+                        ),
+                        CustomFormTextField(
+                          hintText: 'Password',
+                          icon: Icons.security,
+                          onSaved: bloc.setPassword,
+                        ),
+                      ],
+                    ),
                   ),
                   RaisedButton(
                     onPressed: () {

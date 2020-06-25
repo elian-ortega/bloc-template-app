@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'base_bloc.dart';
 
@@ -17,6 +18,10 @@ class SignUpBloc extends BaseBloc {
   /*
   * UI
    */
+
+  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> get formKey => _formKey;
+
   final String _title = 'SignUp';
   String get title => _title;
 
@@ -46,8 +51,12 @@ class SignUpBloc extends BaseBloc {
   }
 
   Future<void> createUserWithEmail() async {
-    await _createUserWithEmailHelper(
-        email: _email, password: _password, fullName: _fullName);
+    _formKey.currentState.save();
+    final isValid = _formKey.currentState.validate();
+    if (isValid) {
+      await _createUserWithEmailHelper(
+          email: _email, password: _password, fullName: _fullName);
+    }
   }
 
   /*

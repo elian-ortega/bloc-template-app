@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'base_bloc.dart';
 import '../locator.dart';
@@ -17,6 +18,10 @@ class LogInBloc extends BaseBloc {
   /*
    * UI
    */
+
+  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> get formKey => _formKey;
+
   final String _title = 'LogIn';
   String get title => _title;
 
@@ -39,7 +44,11 @@ class LogInBloc extends BaseBloc {
   }
 
   Future logInWithEmail() async {
-    await _logInWithEmailHelper(email: _email, password: _password);
+    _formKey.currentState.save();
+    final isValid = _formKey.currentState.validate();
+    if (isValid) {
+      await _logInWithEmailHelper(email: _email, password: _password);
+    }
   }
 
   /*
@@ -63,12 +72,14 @@ class LogInBloc extends BaseBloc {
           title: 'Log In Failed',
           description:
               'There was a problem while loggin in. Please try again later!',
+          buttonTitle: 'Ok',
         );
       }
     } else {
       await _dialogService.showDialog(
         title: 'Log In Failed',
         description: authResult,
+        buttonTitle: 'Ok',
       );
     }
   }

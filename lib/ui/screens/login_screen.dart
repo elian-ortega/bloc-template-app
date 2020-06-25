@@ -18,15 +18,22 @@ class LogInScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomTextField(
-              hintText: 'Email',
-              icon: Icons.mail,
-              onChanged: bloc.setEmail,
-            ),
-            CustomTextField(
-              hintText: 'Password',
-              icon: Icons.security,
-              onChanged: bloc.setPassword,
+            Form(
+              key: bloc.formKey,
+              child: Column(
+                children: [
+                  CustomFormTextField(
+                    hintText: 'Email',
+                    icon: Icons.mail,
+                    onSaved: bloc.setEmail,
+                  ),
+                  CustomFormTextField(
+                    hintText: 'Password',
+                    icon: Icons.security,
+                    onSaved: bloc.setPassword,
+                  ),
+                ],
+              ),
             ),
             !bloc.isBusy ? _Buttons() : CircularProgressIndicator(),
           ],
@@ -47,8 +54,6 @@ class _Buttons extends StatelessWidget {
       children: [
         RaisedButton(
           onPressed: () {
-            print('yes');
-
             bloc.logInWithEmail();
           },
           color: Colors.blue,

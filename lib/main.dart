@@ -12,6 +12,7 @@ import 'blocs/login_bloc.dart';
 import 'blocs/signup_bloc.dart';
 import 'blocs/home_bloc.dart';
 import 'blocs/startup_bloc.dart';
+import 'blocs/addpost_bloc.dart';
 
 void main() {
   setUpLocator();
@@ -22,6 +23,7 @@ void main() {
         ChangeNotifierProvider<SignUpBloc>(create: (_) => SignUpBloc()),
         ChangeNotifierProvider<HomeBloc>(create: (_) => HomeBloc()),
         ChangeNotifierProvider<StartUpBloc>(create: (_) => StartUpBloc()),
+        ChangeNotifierProvider<AddPostBloc>(create: (_) => AddPostBloc()),
       ],
       child: MyApp(),
     ),
