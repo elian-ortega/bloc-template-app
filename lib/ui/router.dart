@@ -44,7 +44,7 @@ class Router {
       case Routes.addpost:
         return _getPageRoute(
           routeName: settings.name,
-          screen: AddPostScreen(),
+          screen: AddPostScreen(postToEdit: settings.arguments),
         );
         break;
       default:

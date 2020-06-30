@@ -8,8 +8,8 @@ import 'ui/dialogs.dart';
 import 'services/navigation_service.dart';
 import 'services/dialog_service.dart';
 
-import 'blocs/login_bloc.dart';
-import 'blocs/signup_bloc.dart';
+import 'blocs/auth/login_bloc.dart';
+import 'blocs/auth/signup_bloc.dart';
 import 'blocs/home_bloc.dart';
 import 'blocs/startup_bloc.dart';
 import 'blocs/addpost_bloc.dart';

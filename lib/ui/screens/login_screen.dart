@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../blocs/login_bloc.dart';
+import '../../blocs/auth/login_bloc.dart';
 
 import '../widgets/custom_text_field.dart';
 

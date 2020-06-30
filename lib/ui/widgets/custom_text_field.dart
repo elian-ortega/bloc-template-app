@@ -5,12 +5,14 @@ class CustomFormTextField extends StatelessWidget {
   final IconData icon;
   final Function onSaved;
   final int maxLines;
+  final String initialValue;
   const CustomFormTextField({
     Key key,
     this.hintText,
     this.icon,
     this.onSaved,
     this.maxLines = 1,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -23,6 +25,7 @@ class CustomFormTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: TextFormField(
+        initialValue: initialValue ?? '',
         onSaved: onSaved,
         maxLines: maxLines,
         validator: (value) {

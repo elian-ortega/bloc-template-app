@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'base_bloc.dart';
+import '../base_bloc.dart';
 
-import '../services/authentication_service.dart';
-import '../services/dialog_service.dart';
+import '../../services/authentication_service.dart';
+import '../../services/dialog_service.dart';
 
-import '../locator.dart';
-import '../services/navigation_service.dart';
-import '../ui/router.dart';
+import '../../locator.dart';
+import '../../services/navigation_service.dart';
+import '../../ui/router.dart';
 
 class SignUpBloc extends BaseBloc {
   final _authenticationService = locator<AuthenticationService>();

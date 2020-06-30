@@ -34,22 +34,89 @@ class HomeScreen extends StatelessWidget {
         stream: bloc.postsStream,
         builder: (_, snapshot) {
           List<Widget> children;
+
           if (snapshot.connectionState == ConnectionState.active) {
             children = snapshot.data.map(
               (post) {
-                return Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(post.title),
-                  color: Colors.red,
+                return _PostTile(
+                  title: post.title,
+                  description: post.description,
+                  author: post.userName,
+                  onEdit: () {
+                    bloc.editPost(postId: post.postId);
+                  },
+                  onDelete: () {
+                    bloc.deletePost(postId: post.postId);
+                  },
                 );
               },
             ).toList();
-            return Column(
+            return ListView(
               children: children,
             );
           }
-          return Container();
+          return Center(
+            child: Text('No Post have been aded yet!'),
+          );
         },
+      ),
+    );
+  }
+}
+
+class _PostTile extends StatelessWidget {
+  final String title;
+  final String description;
+  final String author;
+  final Function onEdit;
+  final Function onDelete;
+
+  const _PostTile({
+    Key key,
+    this.title,
+    this.description,
+    this.author,
+    this.onEdit,
+    this.onDelete,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 20.0),
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        // margin: EdgeInsets.only(bottom: 30.0),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Title: $title'),
+                SizedBox(height: 20.0),
+                Text('Description:\n$description'),
+                SizedBox(height: 30.0),
+                Text('Author:\n${author}'),
+              ],
+            ),
+            Spacer(),
+            Column(
+              children: [
+                IconButton(
+                  color: Colors.red,
+                  icon: Icon(Icons.delete),
+                  onPressed: onDelete,
+                ),
+                SizedBox(height: 20.0),
+                IconButton(
+                  color: Colors.red,
+                  icon: Icon(Icons.edit),
+                  onPressed: onEdit,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

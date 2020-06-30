@@ -15,7 +15,8 @@ class FirestoreService {
   static final CollectionReference _postsCollection =
       Firestore.instance.collection('posts');
 
-  final StreamController _postStreamController = StreamController<List<Post>>();
+  final StreamController _postStreamController =
+      StreamController<List<Post>>.broadcast();
   /*
    * User Related
    */
@@ -48,6 +49,34 @@ class FirestoreService {
       var addResult = await _postsCollection.add(post.toMap());
 
       return addResult != null;
+    } catch (e) {
+      if (e is PlatformException) return e.message;
+      return e.toString();
+    }
+  }
+
+  Future editPost({@required String postId, @required Post post}) async {
+    try {
+      await _postsCollection.document(postId).setData(post.toMap());
+    } catch (e) {
+      if (e is PlatformException) return e.message;
+      return e.toString();
+    }
+  }
+
+  Future deletePost({@required String postId}) async {
+    try {
+      await _postsCollection.document(postId).delete();
+    } catch (e) {
+      if (e is PlatformException) return e.message;
+      return e.toString();
+    }
+  }
+
+  Future getPost({@required String postId}) async {
+    try {
+      var documentReference = await _postsCollection.document(postId);
+      return documentReference.get();
     } catch (e) {
       if (e is PlatformException) return e.message;
       return e.toString();
