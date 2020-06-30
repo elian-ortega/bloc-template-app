@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,9 @@ import 'base_bloc.dart';
 import '../locator.dart';
 import '../models/post.dart';
 
+import '../utils/image_selector.dart';
+
+import '../services/cloud_storage_service.dart';
 import '../services/firestore_service.dart';
 import '../services/navigation_service.dart';
 import '../services/dialog_service.dart';
@@ -14,10 +18,25 @@ class AddPostBloc extends BaseBloc {
   final _firestoreService = locator<FirestoreService>();
   final _navigationService = locator<NavigationService>();
   final _dialogService = locator<DialogService>();
+  final _imageSelector = locator<ImageSelector>();
+  final _cloudStorageService = locator<CloudStorageService>();
 
   Post currentPost;
+
   bool _editingPost = false;
   bool get editingPost => _editingPost;
+
+  File _selectedImage;
+  File get selectedImage => _selectedImage;
+
+  Future selectImage() async {
+    var tempImage = await _imageSelector.selectImage();
+    if (tempImage != null) {
+      _selectedImage = tempImage;
+      notifyListeners();
+    }
+  }
+
   /*
    * UI 
    */
@@ -27,6 +46,7 @@ class AddPostBloc extends BaseBloc {
       _editingPost = true;
       currentPost = postToEdit;
     } else {
+      currentPost = Post(imageUrl: null);
       _editingPost = false;
     }
   }
@@ -70,6 +90,7 @@ class AddPostBloc extends BaseBloc {
         );
       }
     }
+    _selectedImage = null;
   }
 
   /*
@@ -80,15 +101,24 @@ class AddPostBloc extends BaseBloc {
     @required String title,
     @required String description,
   }) async {
+    setBusy = true;
+    var storageResult;
+    if (_selectedImage != null) {
+      storageResult =
+          await _cloudStorageService.uploadImage(imageToUpoad: _selectedImage, title: title);
+    }
+
     var newPost = Post(
       userId: currentUser.id,
       userName: currentUser.fullName,
       title: title,
       description: description,
+      imageUrl: storageResult == null ? storageResult : storageResult.imgUrl,
+      imageFileName: storageResult == null ? storageResult : storageResult.imageFileName,
     );
 
-    setBusy = true;
     var addPostResult = await _firestoreService.createPost(post: newPost);
+
     setBusy = false;
 
     if (addPostResult is bool) {
@@ -97,8 +127,7 @@ class AddPostBloc extends BaseBloc {
       } else {
         await _dialogService.showDialog(
           title: 'Post Creation Failed!',
-          description:
-              'Please try again there was an erro when creating your post.',
+          description: 'Please try again there was an erro when creating your post.',
           buttonTitle: 'Ok',
         );
       }
@@ -124,8 +153,7 @@ class AddPostBloc extends BaseBloc {
     );
 
     setBusy = true;
-    var editPostResult =
-        await _firestoreService.editPost(post: newPost, postId: postId);
+    var editPostResult = await _firestoreService.editPost(post: newPost, postId: postId);
     setBusy = false;
 
     if (!(editPostResult is String)) {

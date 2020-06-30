@@ -1,8 +1,11 @@
-import 'package:bloc_app_template/models/post.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../blocs/home_bloc.dart';
+
+import '../../models/post.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -39,14 +42,15 @@ class HomeScreen extends StatelessWidget {
             children = snapshot.data.map(
               (post) {
                 return _PostTile(
-                  title: post.title,
-                  description: post.description,
-                  author: post.userName,
+                  post: post,
                   onEdit: () {
                     bloc.editPost(postId: post.postId);
                   },
                   onDelete: () {
-                    bloc.deletePost(postId: post.postId);
+                    bloc.deletePost(
+                      postId: post.postId,
+                      imageFileName: post.imageFileName,
+                    );
                   },
                 );
               },
@@ -65,17 +69,13 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _PostTile extends StatelessWidget {
-  final String title;
-  final String description;
-  final String author;
+  final Post post;
   final Function onEdit;
   final Function onDelete;
 
   const _PostTile({
     Key key,
-    this.title,
-    this.description,
-    this.author,
+    this.post,
     this.onEdit,
     this.onDelete,
   }) : super(key: key);
@@ -85,33 +85,49 @@ class _PostTile extends StatelessWidget {
     return Card(
       margin: EdgeInsets.only(bottom: 20.0),
       child: Container(
+        //if htere is an image we dont wan to give a fixed height
+        height: post.imageUrl != null ? null : 150,
         padding: EdgeInsets.all(20.0),
         // margin: EdgeInsets.only(bottom: 30.0),
-        child: Row(
+        child: Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            post.imageUrl != null
+                ? SizedBox(
+                    height: 250,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.contain,
+                      imageUrl: post.imageUrl,
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  )
+                : SizedBox(),
+            Row(
               children: [
-                Text('Title: $title'),
-                SizedBox(height: 20.0),
-                Text('Description:\n$description'),
-                SizedBox(height: 30.0),
-                Text('Author:\n${author}'),
-              ],
-            ),
-            Spacer(),
-            Column(
-              children: [
-                IconButton(
-                  color: Colors.red,
-                  icon: Icon(Icons.delete),
-                  onPressed: onDelete,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Title: ${post.title}'),
+                    SizedBox(height: 10.0),
+                    Text('Description:\n${post.description}'),
+                    SizedBox(height: 10.0),
+                    Text('Author:\n${post.userName}'),
+                  ],
                 ),
-                SizedBox(height: 20.0),
-                IconButton(
-                  color: Colors.red,
-                  icon: Icon(Icons.edit),
-                  onPressed: onEdit,
+                Spacer(),
+                Column(
+                  children: [
+                    IconButton(
+                      color: Colors.red,
+                      icon: Icon(Icons.delete),
+                      onPressed: onDelete,
+                    ),
+                    IconButton(
+                      color: Colors.red,
+                      icon: Icon(Icons.edit),
+                      onPressed: onEdit,
+                    ),
+                  ],
                 ),
               ],
             ),

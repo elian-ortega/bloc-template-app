@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,6 +40,37 @@ class AddPostScreen extends StatelessWidget {
                 onSaved: bloc.setDescription,
                 initialValue: bloc.editingPost ? postToEdit.description : '',
               ),
+              GestureDetector(
+                onTap: () => bloc.selectImage(),
+                child: Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.grey.withOpacity(.6),
+                  ),
+                  child: !bloc.editingPost
+                      ? Center(
+                          child: bloc.selectedImage == null
+                              ? Text(
+                                  'Add Image',
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(.6),
+                                  ),
+                                )
+                              : Image.file(bloc.selectedImage),
+                        )
+                      : SizedBox(
+                          height: 250,
+                          child: CachedNetworkImage(
+                            fit: BoxFit.contain,
+                            imageUrl: bloc.currentPost.imageUrl ?? '',
+                            placeholder: (context, url) =>
+                                Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                          ),
+                        ),
+                ),
+              )
             ],
           ),
         ),
@@ -47,7 +79,11 @@ class AddPostScreen extends StatelessWidget {
         onPressed: () {
           bloc.createPost();
         },
-        child: !bloc.isBusy ? Icon(Icons.add) : CircularProgressIndicator(),
+        child: !bloc.isBusy
+            ? Icon(Icons.add)
+            : CircularProgressIndicator(
+                backgroundColor: Colors.white,
+              ),
       ),
     );
   }

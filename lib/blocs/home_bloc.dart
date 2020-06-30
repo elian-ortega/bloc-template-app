@@ -1,3 +1,4 @@
+import 'package:bloc_app_template/services/cloud_storage_service.dart';
 import 'package:flutter/foundation.dart';
 
 import 'base_bloc.dart';
@@ -17,6 +18,7 @@ class HomeBloc extends BaseBloc {
   static final _dialogService = locator<DialogService>();
   static final _authenticationService = locator<AuthenticationService>();
   static final _firestoreService = locator<FirestoreService>();
+  static final _cloudStorageService = locator<CloudStorageService>();
 
   /*
    * UI 
@@ -42,8 +44,9 @@ class HomeBloc extends BaseBloc {
     await _editPostHelper(postId: postId);
   }
 
-  Future deletePost({@required String postId}) async {
-    await _deletePostHelper(postId: postId);
+  Future deletePost(
+      {@required String postId, @required String imageFileName}) async {
+    await _deletePostHelper(postId: postId, imageFileName: imageFileName);
   }
 
   /*
@@ -78,7 +81,8 @@ class HomeBloc extends BaseBloc {
     }
   }
 
-  Future _deletePostHelper({@required String postId}) async {
+  Future _deletePostHelper(
+      {@required String postId, @required String imageFileName}) async {
     var confirmationResult = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',
       description: 'Are you sure you want to delete this item?',
@@ -89,8 +93,8 @@ class HomeBloc extends BaseBloc {
     if (confirmationResult.confirmed == true) {
       setBusy = true;
       var deleteResult = await _firestoreService.deletePost(postId: postId);
+      await _cloudStorageService.deleteImage(imageFileName);
       setBusy = false;
-
       if (deleteResult is String) {
         await _dialogService.showDialog(
           title: 'Error Opening Post!',
