@@ -8,6 +8,10 @@ import 'package:flutter/foundation.dart';
 import '../locator.dart';
 
 class StoriesBloc extends BaseBloc {
+  StoriesBloc() {
+    listenToStories();
+  }
+
   static final _firestoreService = locator<FirestoreService>();
   static final _dialogService = locator<DialogService>();
 
@@ -27,6 +31,10 @@ class StoriesBloc extends BaseBloc {
 
   Future getStories() async {
     await _getStoriesHelper(userId: currentUser.id);
+  }
+
+  void listenToStories() {
+    _listenToStoriesHelper(userId: currentUser.id);
   }
 
   /*
@@ -59,5 +67,19 @@ class StoriesBloc extends BaseBloc {
         buttonTitle: 'Ok',
       );
     }
+  }
+
+  void _listenToStoriesHelper({@required String userId}) {
+    setBusy = true;
+    _firestoreService.getStoriesRealTime(userId: userId).listen(
+      (storiesData) {
+        var updatedStories = storiesData;
+        if (updatedStories != null && updatedStories.isNotEmpty) {
+          _stories = updatedStories;
+          notifyListeners();
+        }
+      },
+    );
+    setBusy = false;
   }
 }

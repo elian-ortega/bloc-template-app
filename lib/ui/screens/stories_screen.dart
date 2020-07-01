@@ -3,17 +3,21 @@ import 'package:provider/provider.dart';
 
 import '../../blocs/stories_bloc.dart';
 
-class StoriesScreen extends StatelessWidget {
+class StoriesScreen extends StatefulWidget {
+  @override
+  _StoriesScreenState createState() => _StoriesScreenState();
+}
+
+class _StoriesScreenState extends State<StoriesScreen> {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<StoriesBloc>(context);
-    bloc.setUp();
     return Scaffold(
       appBar: AppBar(
         title: Text(bloc.title),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => bloc.getStories(),
+        onPressed: () => bloc.listenToStories(),
         child: !bloc.isBusy
             ? Icon(Icons.library_books)
             : CircularProgressIndicator(

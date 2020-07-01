@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_app_template/models/story.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,6 +17,7 @@ class FirestoreService {
   static final CollectionReference _topStories = Firestore.instance.collection('topStories');
 
   final StreamController _postStreamController = StreamController<List<Post>>.broadcast();
+  final StreamController _storiesStreamController = StreamController<List<Story>>.broadcast();
   /*
    * User Related
    */
@@ -116,5 +118,21 @@ class FirestoreService {
       if (e is PlatformException) return e.message;
       return e.toString();
     }
+  }
+
+  Stream<List<Story>> getStoriesRealTime({@required String userId}) {
+    _topStories.document(userId).snapshots().listen(
+      (storySnapshot) {
+        var stories = <Story>[];
+        storySnapshot.data.forEach((key, value) {
+          var newStory = Story.fromData(value);
+          stories.add(newStory);
+        });
+        print('AQUII');
+        print(stories);
+        _storiesStreamController.add(stories);
+      },
+    );
+    return _storiesStreamController.stream;
   }
 }
