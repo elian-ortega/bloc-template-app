@@ -38,14 +38,17 @@ class HomeBloc extends BaseBloc {
     await _navigationService.navigateTo(Routes.addpost);
   }
 
+  Future<void> navigateToStories() async {
+    await _navigationService.navigateTo(Routes.stories);
+  }
+
   Stream<List<Post>> get postsStream => _firestoreService.listenToPost();
 
   Future editPost({@required String postId}) async {
     await _editPostHelper(postId: postId);
   }
 
-  Future deletePost(
-      {@required String postId, @required String imageFileName}) async {
+  Future deletePost({@required String postId, @required String imageFileName}) async {
     await _deletePostHelper(postId: postId, imageFileName: imageFileName);
   }
 
@@ -74,15 +77,13 @@ class HomeBloc extends BaseBloc {
     } else {
       await _dialogService.showConfirmationDialog(
         title: 'Error Opening Post!',
-        description:
-            'There was an error opening the post please try again later.',
+        description: 'There was an error opening the post please try again later.',
         confirmationTitle: 'Ok',
       );
     }
   }
 
-  Future _deletePostHelper(
-      {@required String postId, @required String imageFileName}) async {
+  Future _deletePostHelper({@required String postId, @required String imageFileName}) async {
     var confirmationResult = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',
       description: 'Are you sure you want to delete this item?',
@@ -98,8 +99,7 @@ class HomeBloc extends BaseBloc {
       if (deleteResult is String) {
         await _dialogService.showDialog(
           title: 'Error Opening Post!',
-          description:
-              'There was an error deleting the post please try again later.',
+          description: 'There was an error deleting the post please try again later.',
           buttonTitle: 'Ok',
         );
       }

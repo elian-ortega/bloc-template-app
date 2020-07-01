@@ -25,6 +25,16 @@ class HomeScreen extends StatelessWidget {
               color: Colors.red,
             ),
           ),
+          IconButton(
+            color: Colors.black,
+            onPressed: () {
+              bloc.navigateToStories();
+            },
+            icon: Icon(
+              Icons.book,
+              color: Colors.black,
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

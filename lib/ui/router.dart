@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../ui/screens/login_screen.dart';
 import '../ui/screens/signup_screen.dart';
+import '../ui/screens/stories_screen.dart';
 
 class Routes {
   static const String startup = 'startup';
@@ -12,6 +13,7 @@ class Routes {
   static const String signup = 'signup';
   static const String home = 'home';
   static const String addpost = 'addpost';
+  static const String stories = 'stories';
 }
 
 class Router {
@@ -45,6 +47,12 @@ class Router {
         return _getPageRoute(
           routeName: settings.name,
           screen: AddPostScreen(postToEdit: settings.arguments),
+        );
+        break;
+      case Routes.stories:
+        return _getPageRoute(
+          routeName: settings.name,
+          screen: StoriesScreen(),
         );
         break;
       default:

@@ -1,3 +1,4 @@
+import 'package:bloc_app_template/blocs/stories_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +25,7 @@ void main() {
         ChangeNotifierProvider<HomeBloc>(create: (_) => HomeBloc()),
         ChangeNotifierProvider<StartUpBloc>(create: (_) => StartUpBloc()),
         ChangeNotifierProvider<AddPostBloc>(create: (_) => AddPostBloc()),
+        ChangeNotifierProvider<StoriesBloc>(create: (_) => StoriesBloc()),
       ],
       child: MyApp(),
     ),

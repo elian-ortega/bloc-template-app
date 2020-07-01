@@ -9,14 +9,13 @@ import '../models/user.dart';
 import '../models/post.dart';
 
 class FirestoreService {
-  static final CollectionReference _userCollection =
-      Firestore.instance.collection('users');
+  static final CollectionReference _userCollection = Firestore.instance.collection('users');
 
-  static final CollectionReference _postsCollection =
-      Firestore.instance.collection('posts');
+  static final CollectionReference _postsCollection = Firestore.instance.collection('posts');
 
-  final StreamController _postStreamController =
-      StreamController<List<Post>>.broadcast();
+  static final CollectionReference _topStories = Firestore.instance.collection('topStories');
+
+  final StreamController _postStreamController = StreamController<List<Post>>.broadcast();
   /*
    * User Related
    */
@@ -103,5 +102,19 @@ class FirestoreService {
     );
 
     return _postStreamController.stream;
+  }
+
+/*
+* Story Related
+ */
+
+  Future getStories({@required String userId}) async {
+    try {
+      var documentReference = await _topStories.document(userId);
+      return documentReference.get();
+    } catch (e) {
+      if (e is PlatformException) return e.message;
+      return e.toString();
+    }
   }
 }
