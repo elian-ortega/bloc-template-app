@@ -3,15 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../../blocs/stories_bloc.dart';
 
-class StoriesScreen extends StatefulWidget {
-  @override
-  _StoriesScreenState createState() => _StoriesScreenState();
-}
-
-class _StoriesScreenState extends State<StoriesScreen> {
+class StoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<StoriesBloc>(context);
+    print('Home screen built');
     return Scaffold(
       appBar: AppBar(
         title: Text(bloc.title),
@@ -31,6 +27,13 @@ class _StoriesScreenState extends State<StoriesScreen> {
                 return ListTile(
                   title: Text(bloc.stories[index].storyTitle),
                   subtitle: Text(bloc.stories[index].category),
+                  trailing: IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onPressed: () => bloc.deleteStory(storyIndex: index),
+                  ),
                 );
               },
             )

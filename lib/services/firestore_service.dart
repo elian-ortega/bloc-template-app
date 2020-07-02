@@ -110,29 +110,41 @@ class FirestoreService {
 * Story Related
  */
 
-  Future getStories({@required String userId}) async {
-    try {
-      var documentReference = await _topStories.document(userId);
-      return documentReference.get();
-    } catch (e) {
-      if (e is PlatformException) return e.message;
-      return e.toString();
-    }
-  }
+  // Future getStories({@required String userId}) async {
+  //   try {
+  //     var documentReference = await _topStories.document(userId);
+  //     return documentReference.get();
+  //   } catch (e) {
+  //     if (e is PlatformException) return e.message;
+  //     return e.toString();
+  //   }
+  // }
 
   Stream<List<Story>> getStoriesRealTime({@required String userId}) {
     _topStories.document(userId).snapshots().listen(
       (storySnapshot) {
         var stories = <Story>[];
-        storySnapshot.data.forEach((key, value) {
-          var newStory = Story.fromData(value);
+        storySnapshot.data.forEach((key, data) {
+          var newStory = Story.fromData(data: data, storyId: key);
           stories.add(newStory);
         });
-        print('AQUII');
         print(stories);
         _storiesStreamController.add(stories);
       },
     );
     return _storiesStreamController.stream;
+  }
+
+  Future deleteStory({@required String userId, @required String storyId}) async {
+    try {
+      var userStoriesData = await _topStories.document(userId).get();
+      var currentStoryData = userStoriesData.data;
+      currentStoryData.remove(storyId);
+      await _topStories.document(userId).setData(currentStoryData);
+      return userStoriesData != null;
+    } catch (e) {
+      if (e is PlatformException) return e.message;
+      return e.toString();
+    }
   }
 }

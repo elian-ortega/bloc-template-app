@@ -9,6 +9,7 @@ import '../locator.dart';
 
 class StoriesBloc extends BaseBloc {
   StoriesBloc() {
+    print('NewBlocCreated');
     listenToStories();
   }
 
@@ -25,49 +26,49 @@ class StoriesBloc extends BaseBloc {
   List<Story> _stories = [];
   List<Story> get stories => _stories;
 
-  Future setUp() async {
-    await _getStoriesHelper(userId: currentUser.id);
-  }
-
-  Future getStories() async {
-    await _getStoriesHelper(userId: currentUser.id);
-  }
+  // Future getStories() async {
+  //   await _getStoriesHelper(userId: currentUser.id);
+  // }
 
   void listenToStories() {
     _listenToStoriesHelper(userId: currentUser.id);
+  }
+
+  void deleteStory({@required int storyIndex}) {
+    _deleteStoryHelper(userId: currentUser.id, storyId: _stories[storyIndex].storyId);
   }
 
   /*
    * Actual Logic
    */
 
-  Future _getStoriesHelper({@required String userId}) async {
-    setBusy = true;
-    var firestoreResult = await _firestoreService.getStories(userId: userId);
-    setBusy = false;
+  // Future _getStoriesHelper({@required String userId}) async {
+  //   setBusy = true;
+  //   var firestoreResult = await _firestoreService.getStories(userId: userId);
+  //   setBusy = false;
 
-    if (firestoreResult is DocumentSnapshot) {
-      if (firestoreResult.data == null) {
-        await _dialogService.showDialog(
-          title: 'Error',
-          description: 'No stories for this user!',
-          buttonTitle: 'Ok',
-        );
-      } else {
-        firestoreResult.data.forEach((key, value) {
-          var newStory = Story.fromData(value);
-          _stories.add(newStory);
-        });
-        notifyListeners();
-      }
-    } else {
-      await _dialogService.showDialog(
-        title: 'Error Getting the stories',
-        description: 'There was an error!',
-        buttonTitle: 'Ok',
-      );
-    }
-  }
+  //   if (firestoreResult is DocumentSnapshot) {
+  //     if (firestoreResult.data == null) {
+  //       await _dialogService.showDialog(
+  //         title: 'Error',
+  //         description: 'No stories for this user!',
+  //         buttonTitle: 'Ok',
+  //       );
+  //     } else {
+  //       firestoreResult.data.forEach((key, value) {
+  //         var newStory = Story.fromData(data: value, storyId: value);
+  //         _stories.add(newStory);
+  //       });
+  //       notifyListeners();
+  //     }
+  //   } else {
+  //     await _dialogService.showDialog(
+  //       title: 'Error Getting the stories',
+  //       description: 'There was an error!',
+  //       buttonTitle: 'Ok',
+  //     );
+  //   }
+  // }
 
   void _listenToStoriesHelper({@required String userId}) {
     setBusy = true;
@@ -81,5 +82,26 @@ class StoriesBloc extends BaseBloc {
       },
     );
     setBusy = false;
+  }
+
+  Future<void> _deleteStoryHelper({@required String userId, @required String storyId}) async {
+    var dialogResponse = await _dialogService.showConfirmationDialog(
+      title: 'Are you sure?',
+      description: 'After deleting the story is not going to be available!',
+      cancelTitle: 'Cancel',
+      confirmationTitle: 'Delete',
+    );
+
+    if (dialogResponse.confirmed == true) {
+      var deleteResult = await _firestoreService.deleteStory(storyId: storyId, userId: userId);
+
+      if (deleteResult is String) {
+        await _dialogService.showDialog(
+          title: 'Error Deleting',
+          description: 'There was an error when deleting the story!',
+          buttonTitle: 'Ok',
+        );
+      }
+    }
   }
 }
