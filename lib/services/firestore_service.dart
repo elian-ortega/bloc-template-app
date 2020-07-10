@@ -98,7 +98,11 @@ class FirestoreService {
               .where((mappedItem) => mappedItem != null)
               .toList();
 
+          print('\nUpdate==>');
+          print(posts);
           _postStreamController.add(posts);
+        } else {
+          _postStreamController.add(<Post>[]);
         }
       },
     );

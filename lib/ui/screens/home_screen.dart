@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
         builder: (_, snapshot) {
           List<Widget> children;
 
-          if (snapshot.connectionState == ConnectionState.active) {
+          if (snapshot.connectionState == ConnectionState.active && snapshot.data.isNotEmpty) {
             children = snapshot.data.map(
               (post) {
                 return _PostTile(

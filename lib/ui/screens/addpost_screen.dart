@@ -21,57 +21,59 @@ class AddPostScreen extends StatelessWidget {
           bloc.title,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: bloc.formKey,
-          child: Column(
-            children: [
-              CustomFormTextField(
-                hintText: 'Title',
-                icon: Icons.title,
-                onSaved: bloc.setTitle,
-                initialValue: bloc.editingPost ? postToEdit.title : '',
-              ),
-              CustomFormTextField(
-                hintText: 'Descrition',
-                icon: Icons.description,
-                maxLines: 5,
-                onSaved: bloc.setDescription,
-                initialValue: bloc.editingPost ? postToEdit.description : '',
-              ),
-              GestureDetector(
-                onTap: () => bloc.selectImage(),
-                child: Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: Colors.grey.withOpacity(.6),
-                  ),
-                  child: !bloc.editingPost
-                      ? Center(
-                          child: bloc.selectedImage == null
-                              ? Text(
-                                  'Add Image',
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(.6),
-                                  ),
-                                )
-                              : Image.file(bloc.selectedImage),
-                        )
-                      : SizedBox(
-                          height: 250,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.contain,
-                            imageUrl: bloc.currentPost.imageUrl ?? '',
-                            placeholder: (context, url) =>
-                                Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) => Icon(Icons.error),
-                          ),
-                        ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: bloc.formKey,
+            child: Column(
+              children: [
+                CustomFormTextField(
+                  hintText: 'Title',
+                  icon: Icons.title,
+                  onSaved: bloc.setTitle,
+                  initialValue: bloc.editingPost ? postToEdit.title : '',
                 ),
-              )
-            ],
+                CustomFormTextField(
+                  hintText: 'Descrition',
+                  icon: Icons.description,
+                  maxLines: 5,
+                  onSaved: bloc.setDescription,
+                  initialValue: bloc.editingPost ? postToEdit.description : '',
+                ),
+                GestureDetector(
+                  onTap: () => bloc.selectImage(),
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.grey.withOpacity(.6),
+                    ),
+                    child: !bloc.editingPost
+                        ? Center(
+                            child: bloc.selectedImage == null
+                                ? Text(
+                                    'Add Image',
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(.6),
+                                    ),
+                                  )
+                                : Image.file(bloc.selectedImage),
+                          )
+                        : SizedBox(
+                            height: 250,
+                            child: CachedNetworkImage(
+                              fit: BoxFit.contain,
+                              imageUrl: bloc.currentPost.imageUrl ?? '',
+                              placeholder: (context, url) =>
+                                  Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                            ),
+                          ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
