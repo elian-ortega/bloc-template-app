@@ -2,7 +2,6 @@ import 'package:bloc_app_template/blocs/base_bloc.dart';
 import 'package:bloc_app_template/models/story.dart';
 import 'package:bloc_app_template/services/dialog_service.dart';
 import 'package:bloc_app_template/services/firestore_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import '../locator.dart';
