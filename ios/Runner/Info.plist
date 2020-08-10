@@ -11,6 +11,20 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Access to so that microphone can be used</string>
 
+	<!-- Google sing in -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+				<string>com.googleusercontent.apps.10204642282-qm77ucotubsu1aod7i3natd0f9h1n3nk</string>
+			</array>
+		</dict>
+	</array>
+
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

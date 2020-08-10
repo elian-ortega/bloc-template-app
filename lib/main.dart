@@ -46,7 +46,6 @@ class MyApp extends StatelessWidget {
           builder: (context) => AppDialog(child: child),
         ),
       ),
-      // home: LogInScreen(),
       initialRoute: Routes.startup,
       onGenerateRoute: Router.generateRoute,
       navigatorKey: locator<NavigationService>().navigationKey,
